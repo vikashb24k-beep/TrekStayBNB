@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrekStayBNB-new</title>
+</head>
+<body>
+    <h1>Edit Your Listings</h1>
+    <form method="POST" action="/listings/<%=listing._id%>?_method=PUT">
+        <input type="text" value="<%=listing.title%>" name="listing[title]" required> <br><br>
+        <textarea type="text" name="listing[description]" required><%=listing.description%></textarea>
+        <br><br>
+        <input type="text" value="<%=listing.image%>" name="listing[image]" >
+        <br><br>
+        <input type="number" value="<%=listing.price%>" name="listing[price]" required>
+        <br><br>
+        <input type="text" value="<%=listing.location%>" name="listing[location]" >
+        <br><br>
+        <input type="text" value="<%=listing.country%>" name="listing[country]">
+        <br><br>
+        <button>Edit Button</button>
+    </form>
+</body>
+</html>

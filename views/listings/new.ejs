@@ -6,6 +6,20 @@
     <title>TrekStayBNB-new</title>
 </head>
 <body>
-    
+    <h1>Create new list</h1>
+    <form method="POST" action="/listings">
+        <input type="text" placeholder="Title" name="listing[title]" required> <br><br>
+        <textarea type="text" name="listing[description]" required>Description</textarea>
+        <br><br>
+        <input type="text" placeholder="Img Url :" name="listing[image]" >
+        <br><br>
+        <input type="number" placeholder="price" name="listing[price]" required>
+        <br><br>
+        <input type="text" placeholder="Location" name="listing[location]" >
+        <br><br>
+        <input type="text" placeholder="Country" name="listing[country]">
+        <br><br>
+        <button>Submit</button>
+    </form>
 </body>
 </html>

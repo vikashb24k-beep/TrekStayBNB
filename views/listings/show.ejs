@@ -1,22 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listing-details</title>
-
+    <title>Listing Details</title>
 </head>
+
 <body>
-<ul>
 
-<h2>Details</h2>
-<li>Title : <%=listing.title%></>
-<li>description : <%= listing.description%></li>
-<li>price : &#x20B9; <%= listing.price.toLocaleString('en-IN');%></li>
-<li>country : <%= listing.country%></li>
+    <ul>
+        <h2>Details</h2>
 
-</ul>
+        <li>Title : <%= listing.title %></li>
 
+        <li>Description : <%= listing.description %></li>
 
+        <li>Price : &#x20B9; <%= listing.price.toLocaleString('en-IN') %></li>
+
+        <li>Country : <%= listing.country %></li>
+    </ul>
+
+    <div>
+        <a href="/listings/<%= listing._id %>/edit">
+            <button>Edit</button>
+        </a>
+    </div>
+    <br>
+     <div>
+        <form form="POST" action="/listings/<%=listing._id%>?_method=DELETE">
+            <button>Delelete this listing</button>
+        </form>
+    </div>
 </body>
+
 </html>

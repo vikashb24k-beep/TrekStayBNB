@@ -5,7 +5,7 @@ const path = require('path');
 const Listing = require('./models/listing.js');
 const { title } = require('process');
 const data = require("./init/data.js");
-
+const methodOverride = require("method-override");
 
 // ================= EXPRESS APP =================
 
@@ -25,6 +25,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
 // ================= ROUTES =================
 
@@ -32,30 +33,10 @@ app.get('/', (req, res) => {
     res.send('Welcome to Airbnb Clone! , i am root');
 });
 
-// app.get("/testListing", async(req,res)=>{
-//     let sampleListing = new Listing({
-//         title : "my new villa",
-//         description : "by the beach",
-//         price : 1200,
-//         location : "Goa",
-//         country : "India",
-//     });
-
-//     await sampleListing.save().then((result)=>{
-//         console.log(result);
-//     }).catch((e)=>{
-//         console.log(e);
-//     });
-//     res.send("res tested")
-// });
-
 // index route
 app.get('/listings', async (req, res) => {
     try {
         const allListings = await Listing.find({});
-
-        console.log(allListings);
-
         res.render('listings/index.ejs', {
             allListings,
         });
@@ -66,6 +47,13 @@ app.get('/listings', async (req, res) => {
     }
 });
 
+
+//new route
+
+app.get("/listings/new",(req,res)=>{
+    res.render('listings/new.ejs');
+})
+
 // show route --> Read
 
 app.get("/listings/:id", async (req,res)=>{
@@ -74,11 +62,32 @@ app.get("/listings/:id", async (req,res)=>{
     res.render('listings/show', { listing });
 });
 
-//new route
+// create route
 
-app.get("/listings/new",(req,res)=>{
-    
-})
+app.post("/listings",async (req,res)=>{
+    const newListing = new Listing(req.body.listing);
+    await newListing.save();
+    res.redirect('/listings');
+});
+
+//edit route
+
+app.get('/listings/:id/edit', async (req, res) => {
+    const { id } = req.params;
+
+    const listing = await Listing.findById(id);
+
+    res.render('listings/edit.ejs', { listing });
+});
+
+//update route
+
+app.put("/listings/:id", async (req,res)=>{
+    const { id } = req.params;
+    await Listing.findByIdAndUpdate(id,{...req.body.listing});
+    res.redirect(`/listings/${id}`);
+});
+
 
 
 
