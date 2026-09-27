@@ -6,6 +6,7 @@ const Listing = require('./models/listing.js');
 const { title } = require('process');
 const data = require("./init/data.js");
 const methodOverride = require("method-override");
+const ejsMate = require("ejs-mate");
 
 // ================= EXPRESS APP =================
 
@@ -20,6 +21,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.engine("ejs",ejsMate);
 
 // ================= MIDDLEWARE =================
 
@@ -30,7 +32,7 @@ app.use(methodOverride('_method'));
 // ================= ROUTES =================
 
 app.get('/', (req, res) => {
-    res.send('Welcome to Airbnb Clone! , i am root');
+    res.send('home');
 });
 
 // index route
@@ -88,6 +90,21 @@ app.put("/listings/:id", async (req,res)=>{
     res.redirect(`/listings/${id}`);
 });
 
+//delete route
+app.delete('/listings/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deletedListing = await Listing.findByIdAndDelete(id);
+
+        console.log('Deleted listing:', deletedListing);
+
+        res.redirect('/listings');
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Error deleting listing');
+    }
+});
 
 
 

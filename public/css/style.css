@@ -1,5 +1,102 @@
-a{
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container{
+    flex: 1;
+}
+
+.navbar{
+    height: 5rem;
+    background-color: white;
+}
+.kk{
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+.nav-link{
+    color: #222222 !important;
+}
+
+/* Footer */
+
+.f-info {
+    display: flex;
+    height: 8rem;
+    background-color: #ebebeb;
+
+    flex-wrap: wrap;
+
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.f-info-social {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.f-info-social a {
+    font-size: 1.5rem;
+}
+
+.f-info-social a:hover {
+    opacity: 0.7;
+}
+
+.f-info-links {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.f-info-links a {
     text-decoration: none;
-    color: black;
-    
+    color: #222222;
+}
+
+.f-info-links a:hover {
+    text-decoration: underline;
+}
+
+/* cards */
+
+.card{
+    border : none !important;
+    margin-bottom: 2rem;
+}
+
+.card-img-top{
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+.card-body{
+    padding: 0 !important;
+
+}
+.card-text p{
+    font-weight: 400;
+}
+
+.listing-link{
+    text-decoration: none;
+}
+
+/* card effect */
+
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover {
+    opacity: 0.2;
+    background-color: white;
 }

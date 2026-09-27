@@ -1,25 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrekStayBNB-new</title>
-</head>
-<body>
-    <h1>Create new list</h1>
-    <form method="POST" action="/listings">
-        <input type="text" placeholder="Title" name="listing[title]" required> <br><br>
-        <textarea type="text" name="listing[description]" required>Description</textarea>
-        <br><br>
-        <input type="text" placeholder="Img Url :" name="listing[image]" >
-        <br><br>
-        <input type="number" placeholder="price" name="listing[price]" required>
-        <br><br>
-        <input type="text" placeholder="Location" name="listing[location]" >
-        <br><br>
-        <input type="text" placeholder="Country" name="listing[country]">
-        <br><br>
-        <button>Submit</button>
-    </form>
-</body>
-</html>
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-4">
+
+    <div class="col-8 offset-2">
+
+        <h1 class="mb-4">Create New Listing</h1>
+
+        <form method="POST" action="/listings">
+
+            <!-- Title -->
+            <div class="mb-3">
+                <label for="title" class="form-label">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    placeholder="Enter title"
+                    name="listing[title]"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label for="description" class="form-label">
+                    Description
+                </label>
+
+                <textarea
+                    name="listing[description]"
+                    class="form-control"
+                    placeholder="Enter description"
+                    required
+                ></textarea>
+            </div>
+
+
+            <!-- Image -->
+            <div class="mb-3" >
+                <label for="image" class="form-label">
+                    Image URL
+                </label>
+
+                <input
+                    type="text"
+                    placeholder="Enter image URL"
+                    name="listing[image][url]"
+                    class="form-control"
+                >
+            </div>
+
+
+            <!-- Price -->
+            <div class="mb-3">
+                <label for="price" class="form-label">
+                    Price
+                </label>
+
+                <input
+                    type="number"
+                    placeholder="Enter price"
+                    name="listing[price]"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+
+            <!-- Location + Country -->
+            <div class="row">
+
+                <div class="mb-3 col-md-8">
+                    <label for="location" class="form-label">
+                        Location
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Enter location"
+                        name="listing[location]"
+                        class="form-control"
+                        required
+                    >
+                </div>
+
+
+                <div class="mb-3 col-md-4">
+                    <label for="country" class="form-label">
+                        Country
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Enter country"
+                        name="listing[country]"
+                        class="form-control"
+                        required
+                    >
+                </div>
+
+            </div>
+
+
+            <!-- Submit -->
+            <button type="submit" class="add-btn btn-dark">
+                Add Listing
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
