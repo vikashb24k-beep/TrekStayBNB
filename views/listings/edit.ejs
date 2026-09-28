@@ -14,7 +14,7 @@
 
                 <input
                     type="text"
-                    placeholder="Enter title"
+                    placeholder="<%=listing.title%>"
                     name="listing[title]"
                     class="form-control"
                     required
@@ -30,7 +30,7 @@
                 <textarea
                     name="listing[description]"
                     class="form-control"
-                    placeholder="Enter description"
+                    placeholder="<%=listing.description%>"
                     required
                 ></textarea>
             </div>
@@ -43,7 +43,7 @@
 
                 <input
                     type="text"
-                    placeholder="Enter image URL"
+                    placeholder="<%=listing.image%>"
                     name="listing[image][url]"
                     class="form-control"
                 >
@@ -58,7 +58,7 @@
 
                 <input
                     type="number"
-                    placeholder="Enter price"
+                    placeholder="<%=listing.price%>"
                     name="listing[price]"
                     class="form-control"
                     required
@@ -75,7 +75,7 @@
 
                     <input
                         type="text"
-                        placeholder="Enter location"
+                        placeholder="<%=listing.location%>"
                         name="listing[location]"
                         class="form-control"
                         required
@@ -90,7 +90,7 @@
 
                     <input
                         type="text"
-                        placeholder="Enter country"
+                        placeholder="<%=listing.country%>"
                         name="listing[country]"
                         class="form-control"
                         required
@@ -99,11 +99,7 @@
 
             </div>
              <!-- Submit -->
-            <button  type="submit" class="edit-btn btn-dark">
+            <button type="submit" class="btn btn-dark">
                 Edit Button
             </button>
-
-
-
-
  </form>

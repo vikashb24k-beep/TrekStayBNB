@@ -1,28 +1,77 @@
+<% layout("/layouts/boilerplate") %>
 
-<% layout('/layouts/boilerplate')%>
-<body>
+<div class="row mt-5">
 
-    <ul>
-        <h2>Details</h2>
+    <div class="col-8 offset-2">
 
-        <li>Title : <%= listing.title %></li>
+        <h2 class="mb-4">Listing Details</h2>
 
-        <li>Description : <%= listing.description %></li>
+        <div class="card">
 
-        <li>Price : &#x20B9; <%= listing.price.toLocaleString('en-IN') %></li>
+            <img
+                src="<%= listing.image.url %>"
+                class="card-img-top show-img"
+                alt="<%= listing.title %>"
+            >
 
-        <li>Country : <%= listing.country %></li>
-    </ul>
+            <div class="card-body">
 
-    <div>
-        <a href="/listings/<%= listing._id %>/edit">
-            <button>Edit</button>
-        </a>
+                <h3 class="card-title">
+                    <%= listing.title %>
+                </h3>
+
+                <p class="card-text">
+                    <strong>Description:</strong>
+                    <%= listing.description %>
+                </p>
+
+                <p class="card-text">
+                    <strong>Price:</strong>
+                    ₹ <%= listing.price.toLocaleString("en-IN") %>
+                </p>
+
+                <p class="card-text">
+                    <strong>Location:</strong>
+                    <%= listing.location %>
+                </p>
+
+                <p class="card-text">
+                    <strong>Country:</strong>
+                    <%= listing.country %>
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Buttons -->
+
+        <div class="mt-4">
+
+            <a
+                href="/listings/<%= listing._id %>/edit"
+                class="btn btn-dark"
+            >
+                Edit
+            </a>
+
+
+            <form
+                method="POST"
+                action="/listings/<%= listing._id %>?_method=DELETE"
+                class="d-inline"
+            >
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                >
+                    Delete this listing
+                </button>
+            </form>
+
+        </div>
+
     </div>
-    <br>
-     <div>
-        <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
-            <button>Delelete this listing</button>
-        </form>
-    </div>
-</body>
+
+</div>
