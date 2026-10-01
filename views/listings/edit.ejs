@@ -4,7 +4,7 @@
 
     <div class="col-8 offset-2">
     <h1 class="mb-4">Edit Your Listings</h1>
-    <form method="POST" action="/listings/<%=listing._id%>?_method=PUT">
+    <form method="POST" action="/listings/<%=listing._id%>?_method=PUT" novalidate class=" needs-validation ">
 
                     <!-- Title -->
             <div class="mb-3">
@@ -19,7 +19,12 @@
                     class="form-control"
                     required
                 >
-            </div>
+               <div class="invalid-feedback">
+                    Enter valid title!!
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                 </div>
 
                         <!-- Description -->
             <div class="mb-3">
@@ -31,8 +36,14 @@
                     name="listing[description]"
                     class="form-control"
                     placeholder="<%=listing.description%>"
-                    required
+                   
                 ></textarea>
+                <div class="invalid-feedback">
+                    Enter valid description!!
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                 </div>
             </div>
 
               <!-- Image -->
@@ -43,10 +54,17 @@
 
                 <input
                     type="text"
-                    placeholder="<%=listing.image%>"
+                    placeholder="<%=listing.image.url%>"
                     name="listing[image][url]"
                     class="form-control"
+                    required
                 >
+                <div class="invalid-feedback">
+                    Enter valid Url!!
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                 </div>
             </div>
 
 
@@ -63,6 +81,13 @@
                     class="form-control"
                     required
                 >
+                <div class="invalid-feedback">
+                    Enter valid price!!
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                 </div>
+
             </div>
 
              <!-- Location + Country -->
@@ -80,6 +105,12 @@
                         class="form-control"
                         required
                     >
+                    <div class="invalid-feedback">
+                    Enter valid location!!
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                 </div>
                 </div>
 
 
@@ -95,6 +126,12 @@
                         class="form-control"
                         required
                     >
+                    <div class="invalid-feedback">
+                    Enter valid country!!
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                 </div>
                 </div>
 
             </div>

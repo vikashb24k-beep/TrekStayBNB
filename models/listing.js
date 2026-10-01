@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Review = require('./review.js');
 
 const Schema = mongoose.Schema;
 
@@ -22,7 +23,7 @@ const listingSchema = new Schema({
         url: {
             type: String,
             default:
-                'https://media.istockphoto.com/id/509891863/photo/businessman-icon-profile-picture.webp?a=1&b=1&s=612x612&w=0&k=20&c=BrpRU7iBCJbnHQh8USmV9qkzOTCuop82uJ8O1rJx1t0=',
+                'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R_4LyKaJZnZrrU3hAb2GVAGswoSFlMfhe83cxZ6MOw9cCpSSLMhJCHxqgteiD06IJ3Rv4HyjmMYSLxFvn1LxkWv9RSPtUwWNjBeDrZTWby_0xl42iLEfHiHSeSCy1oVl-jUGiymQ=s1360-w1360-h1020-rw'
         },
     },
 
@@ -40,7 +41,24 @@ const listingSchema = new Schema({
         type: String,
         required: true,
     },
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review',
+        },
+    ],
 });
+
+// middleware to delete all reviews associated with a listing when the listing is deleted
+
+listingSchema.post('findOneAndDelete', async function (doc) {
+    if (doc) {
+        await Review.deleteMany({
+            _id: { $in: doc.reviews }
+        });
+    }
+});
+
 
 const Listing = mongoose.model('Listing', listingSchema);
 
