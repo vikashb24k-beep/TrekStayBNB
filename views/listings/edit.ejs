@@ -14,7 +14,7 @@
 
                 <input
                     type="text"
-                    placeholder="<%=listing.title%>"
+                    value="<%=listing.title%>"
                     name="listing[title]"
                     class="form-control"
                     required
@@ -35,9 +35,7 @@
                 <textarea
                     name="listing[description]"
                     class="form-control"
-                    placeholder="<%=listing.description%>"
-                   
-                ></textarea>
+                ><%=listing.description%></textarea>
                 <div class="invalid-feedback">
                     Enter valid description!!
                 </div>
@@ -54,7 +52,7 @@
 
                 <input
                     type="text"
-                    placeholder="<%=listing.image.url%>"
+                    value="<%=listing.image.url%>"
                     name="listing[image][url]"
                     class="form-control"
                     required
@@ -76,7 +74,7 @@
 
                 <input
                     type="number"
-                    placeholder="<%=listing.price%>"
+                    value="<%=listing.price%>"
                     name="listing[price]"
                     class="form-control"
                     required
@@ -100,7 +98,7 @@
 
                     <input
                         type="text"
-                        placeholder="<%=listing.location%>"
+                        value="<%=listing.location%>"
                         name="listing[location]"
                         class="form-control"
                         required
@@ -121,7 +119,7 @@
 
                     <input
                         type="text"
-                        placeholder="<%=listing.country%>"
+                        value="<%=listing.country%>"
                         name="listing[country]"
                         class="form-control"
                         required
