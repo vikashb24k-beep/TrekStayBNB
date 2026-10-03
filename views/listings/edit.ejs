@@ -51,14 +51,13 @@
                 </label>
 
                 <input
-                    type="text"
-                    value="<%=listing.image.url%>"
+                    type="url"
+                    value="<%= listing.image?.url || '' %>"
                     name="listing[image][url]"
                     class="form-control"
-                    required
                 >
                 <div class="invalid-feedback">
-                    Enter valid Url!!
+                    Enter a valid image URL (http or https), or leave it blank.
                 </div>
                 <div class="valid-feedback">
                     Looks good!

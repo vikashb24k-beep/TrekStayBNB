@@ -11,7 +11,8 @@
         <div class="card">
 
             <img
-                src="<%= listing.image.url %>"
+                src="<%= listing.image?.url || '/images/listing-placeholder.svg' %>"
+                onerror="this.onerror=null; this.src='/images/listing-placeholder.svg';"
                 class="card-img-top show-img"
                 alt="<%= listing.title %>"
             >

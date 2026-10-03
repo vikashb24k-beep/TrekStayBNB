@@ -6,6 +6,30 @@ const ExpressError = require('../utils/ExpressError.js');
 const { listingSchema } = require('../schema.js');
 const Listing = require('../models/listing.js');
 
+const DEFAULT_LISTING_IMAGE = '/images/listing-placeholder.svg';
+
+const normalizeListingImage = (listing) => {
+    const imageUrl = listing.image?.url?.trim();
+
+    return {
+        ...listing,
+        image: {
+            ...listing.image,
+            url: imageUrl || DEFAULT_LISTING_IMAGE,
+        },
+    };
+};
+
+const requireLogin = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        req.session.returnTo = req.originalUrl;
+        req.flash('error', 'Please log in to create a listing.');
+        return res.redirect('/login');
+    }
+
+    next();
+};
+
 // ================= VALIDATION =================
 
 const validateListing = (req, res, next) => {
@@ -35,7 +59,7 @@ router.get(
 // ================= NEW ROUTE =================
 // GET /listings/new
 
-router.get('/new', (req, res) => {
+router.get('/new', requireLogin, (req, res) => {
     res.render('listings/new.ejs');
 });
 
@@ -44,9 +68,10 @@ router.get('/new', (req, res) => {
 
 router.post(
     '/',
+    requireLogin,
     validateListing,
     wrapAsync(async (req, res) => {
-        const newListing = new Listing(req.body.listing);
+        const newListing = new Listing(normalizeListingImage(req.body.listing));
 
         await newListing.save();
 
@@ -105,7 +130,7 @@ router.put(
 
         const updatedListing = await Listing.findByIdAndUpdate(
             id,
-            { ...req.body.listing },
+            normalizeListingImage(req.body.listing),
             {
                 new: true,
                 runValidators: true,

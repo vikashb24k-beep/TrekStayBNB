@@ -10,7 +10,7 @@ const listingSchema = Joi.object({
 
         image: Joi.object({
             filename: Joi.string().allow('', null),
-            url: Joi.string().allow('', null),
+            url: Joi.string().uri({ scheme: ['http', 'https'] }).allow('', null),
         }).allow(null),
     }).required(),
 });

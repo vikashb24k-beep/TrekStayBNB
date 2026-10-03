@@ -22,8 +22,7 @@ const listingSchema = new Schema({
 
         url: {
             type: String,
-            default:
-                'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R_4LyKaJZnZrrU3hAb2GVAGswoSFlMfhe83cxZ6MOw9cCpSSLMhJCHxqgteiD06IJ3Rv4HyjmMYSLxFvn1LxkWv9RSPtUwWNjBeDrZTWby_0xl42iLEfHiHSeSCy1oVl-jUGiymQ=s1360-w1360-h1020-rw'
+            default: '/images/listing-placeholder.svg',
         },
     },
 

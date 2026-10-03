@@ -30,6 +30,12 @@
 
     <!-- Main content -->
     <main class="container">
+        <% if (success && success.length) { %>
+            <div class="alert alert-success mt-3" role="alert"><%= success[0] %></div>
+        <% } %>
+        <% if (error && error.length) { %>
+            <div class="alert alert-danger mt-3" role="alert"><%= error[0] %></div>
+        <% } %>
         <%- body %>
     </main>
 

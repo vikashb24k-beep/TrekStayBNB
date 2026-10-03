@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Listing image unavailable</title>
+  <desc id="desc">A simple landscape illustration used when a listing has no available image.</desc>
+  <rect width="1200" height="800" fill="#eef2f3"/>
+  <circle cx="900" cy="180" r="74" fill="#ffd88a"/>
+  <path d="M0 555 275 300l205 220 160-160 560 440H0Z" fill="#b6d0c1"/>
+  <path d="m260 316 15-16 205 220-53 52zM640 360l560 440H925L605 485z" fill="#8eafa0"/>
+  <path d="M0 610q170-72 340 0t340 0 340 0 340 0v190H0z" fill="#d5e3dc"/>
+  <text x="600" y="735" text-anchor="middle" fill="#53645d" font-family="Arial, sans-serif" font-size="34">Image unavailable</text>
+</svg>
