@@ -29,8 +29,10 @@ router.post('/signup', async (req, res, next) => {
             req.login(registeredUser, (err) => err ? reject(err) : resolve());
         });
 
+        const redirectUrl = req.session.returnTo || '/listings';
+        delete req.session.returnTo;
         req.flash('success', 'Welcome to TrekStayBNB! Your account is ready.');
-        res.redirect('/listings');
+        res.redirect(redirectUrl);
     } catch (err) {
         if (err.name === 'UserExistsError') {
             req.flash('error', `${username} That username is already taken. Please choose another.`);

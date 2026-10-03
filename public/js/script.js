@@ -7,9 +7,26 @@
 
     // Loop over them and prevent submission
     Array.from(forms).forEach((form) => {
+        const requiredFields = form.querySelectorAll('[required]');
+
+        const validateRequiredFields = () => {
+            requiredFields.forEach((field) => {
+                field.setCustomValidity(
+                    field.value.trim() ? '' : 'Please fill out this field.'
+                );
+            });
+        };
+
+        requiredFields.forEach((field) => {
+            field.addEventListener('input', validateRequiredFields);
+            field.addEventListener('blur', validateRequiredFields);
+        });
+
         form.addEventListener(
             'submit',
             (event) => {
+                validateRequiredFields();
+
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
