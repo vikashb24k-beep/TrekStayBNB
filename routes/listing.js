@@ -125,6 +125,9 @@ router.post(
                 )
             );
 
+        newListing.owner = req.user._id;
+
+
 
         await newListing.save();
 
@@ -155,15 +158,17 @@ router.get(
         const listing =
             await Listing
                 .findById(id)
-                .populate('reviews');
+                .populate('reviews')
+                .populate('owner');
 
 
         if (!listing) {
 
-            throw new ExpressError(
-                404,
+           req.flash(
+                'error',
                 'Listing not found'
             );
+            res.redirect('/listings');
 
         }
 

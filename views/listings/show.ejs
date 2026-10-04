@@ -10,7 +10,9 @@
                 class="card-img-top show-img"
                 alt="<%= listing.title %>"
             >
+
             <div class="card-body">
+                <p class="card-text"><strong>Owner:</strong> <%= listing.owner.username %></p>
                 <p class="card-text"><strong>Description:</strong> <%= listing.description %></p>
                 <p class="card-text"><strong>Price:</strong> &#8377; <%= listing.price.toLocaleString('en-IN') %> / night</p>
                 <p class="card-text"><strong>Location:</strong> <%= listing.location %></p>
