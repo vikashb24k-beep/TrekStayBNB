@@ -8,6 +8,7 @@ const ExpressError = require('../utils/ExpressError.js');
 const { listingSchema } = require('../schema.js');
 
 const Listing = require('../models/listing.js');
+const listingController = require('../controllers/listings.js');
 const { isLoggedIn } = require('../middleware.js');
 
 
@@ -96,20 +97,7 @@ const validateListing = (req, res, next) => {
 
 router.get(
     '/',
-    wrapAsync(async (req, res) => {
-
-        const allListings =
-            await Listing.find({});
-
-
-        res.render(
-            'listings/index.ejs',
-            {
-                allListings
-            }
-        );
-
-    })
+    wrapAsync(listingController.index)
 );
 
 
@@ -119,13 +107,7 @@ router.get(
 router.get(
     '/new',
     isLoggedIn,
-    (req, res) => {
-
-        res.render(
-            'listings/new.ejs'
-        );
-
-    }
+    wrapAsync(listingController.renderNewForm)
 );
 
 
@@ -137,31 +119,7 @@ router.post(
     isLoggedIn,
     validateListing,
 
-    wrapAsync(async (req, res) => {
-
-        const newListing =
-            new Listing(
-                normalizeListingImage(
-                    req.body.listing
-                )
-            );
-
-        newListing.owner = req.user._id;
-
-
-
-        await newListing.save();
-
-
-        req.flash(
-            'success',
-            'New listing created successfully!'
-        );
-
-
-        res.redirect('/listings');
-
-    })
+    wrapAsync(listingController.createListing)
 );
 
 
@@ -170,36 +128,7 @@ router.post(
 
 router.get(
     '/:id',
-
-    wrapAsync(async (req, res) => {
-
-        const { id } = req.params;
-
-        if (!mongoose.isValidObjectId(id)) {
-            throw new ExpressError(404, 'Listing not found');
-        }
-
-
-        const listing =
-            await Listing
-                .findById(id)
-                .populate({ path: 'reviews', populate: { path: 'author' } })
-                .populate('owner');
-
-
-        if (!listing) {
-            throw new ExpressError(404, 'Listing not found');
-        }
-
-
-        res.render(
-            'listings/show.ejs',
-            {
-                listing
-            }
-        );
-
-    })
+    wrapAsync(listingController.showListing)
 );
 
 
@@ -208,18 +137,9 @@ router.get(
 
 router.get(
     '/:id/edit',
-
     isLoggedIn,
     isOwner,
-
-    (req, res) => {
-        res.render(
-            'listings/edit.ejs',
-            {
-                listing: res.locals.listing
-            }
-        );
-    }
+    wrapAsync(listingController.renderEditForm)
 );
 
 
@@ -228,101 +148,14 @@ router.get(
 
 router.put(
     '/:id',
-
     isLoggedIn,
     isOwner,
-
     validateListing,
-
-    wrapAsync(async (req, res) => {
-
-        const { id } = req.params;
-        const updatedListing =
-            await Listing.findByIdAndUpdate(
-
-                id,
-
-                normalizeListingImage(
-                    req.body.listing
-                ),
-
-                {
-                    new: true,
-                    runValidators: true
-                }
-
-            );
-
-
-        if (!updatedListing) {
-
-            throw new ExpressError(
-                404,
-                'Listing not found'
-            );
-
-        }
-
-
-        req.flash(
-            'success',
-            'Listing updated successfully!'
-        );
-
-
-        res.redirect(
-            `/listings/${id}`
-        );
-
-    })
+    wrapAsync(listingController.updateListing)
 );
-
 
 // ================= DELETE ROUTE =================
 // DELETE /listings/:id
 
-router.delete(
-    '/:id',
-
-    isLoggedIn,
-    isOwner,
-
-    wrapAsync(async (req, res) => {
-
-        const { id } = req.params;
-
-
-        const deletedListing = await Listing.findByIdAndDelete(id);
-
-
-        if (!deletedListing) {
-
-            throw new ExpressError(
-                404,
-                'Listing not found'
-            );
-
-        }
-
-
-        console.log(
-            'Deleted listing:',
-            deletedListing
-        );
-
-
-        req.flash(
-            'success',
-            'Listing deleted successfully!'
-        );
-
-
-        res.redirect(
-            '/listings'
-        );
-
-    })
-);
-
-
+router.delete('/:id', isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));
 module.exports = router;
