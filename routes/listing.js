@@ -7,6 +7,7 @@ const ExpressError = require('../utils/ExpressError.js');
 const { listingSchema } = require('../schema.js');
 
 const Listing = require('../models/listing.js');
+const { isLoggedIn } = require('../middleware.js');
 
 
 // ================= DEFAULT IMAGE =================
@@ -36,28 +37,6 @@ const normalizeListingImage = (listing) => {
 
 };
 
-
-// ================= LOGIN MIDDLEWARE =================
-
-const requireLogin = (req, res, next) => {
-
-    if (!req.isAuthenticated()) {
-
-        // Save requested URL
-        req.session.returnTo = req.originalUrl;
-
-        req.flash(
-            'error',
-            'Please log in to create a listing.'
-        );
-
-        return res.redirect('/login');
-
-    }
-
-    next();
-
-};
 
 
 // ================= VALIDATION =================
@@ -118,7 +97,7 @@ router.get(
 
 router.get(
     '/new',
-    requireLogin,
+    isLoggedIn,
     (req, res) => {
 
         res.render(
@@ -134,7 +113,7 @@ router.get(
 
 router.post(
     '/',
-    requireLogin,
+    isLoggedIn,
     validateListing,
 
     wrapAsync(async (req, res) => {
@@ -206,7 +185,7 @@ router.get(
 router.get(
     '/:id/edit',
 
-    requireLogin,
+    isLoggedIn,
 
     wrapAsync(async (req, res) => {
 
@@ -244,7 +223,7 @@ router.get(
 router.put(
     '/:id',
 
-    requireLogin,
+    isLoggedIn,
 
     validateListing,
 
@@ -300,7 +279,7 @@ router.put(
 router.delete(
     '/:id',
 
-    requireLogin,
+    isLoggedIn,
 
     wrapAsync(async (req, res) => {
 

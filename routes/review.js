@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router({ mergeParams: true });
 
 const wrapAsync = require('../utils/wrapAsync.js');
@@ -8,16 +9,22 @@ const { reviewSchema } = require('../schema.js');
 
 const Review = require('../models/review.js');
 const Listing = require('../models/listing.js');
+const { isLoggedIn } = require('../middleware.js');
 
 // ================= VALIDATION =================
 
+
 const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
+    const { error, value } = reviewSchema.validate(req.body, {
+        abortEarly: false,
+        convert: true,
+    });
 
     if (error) {
         throw new ExpressError(400, error.message);
     }
 
+    req.body = value;
     next();
 };
 
@@ -26,6 +33,7 @@ const validateReview = (req, res, next) => {
 
 router.post(
     '/',
+    isLoggedIn,
     validateReview,
     wrapAsync(async (req, res) => {
         const { id } = req.params;
@@ -43,7 +51,7 @@ router.post(
         await newReview.save();
         await listing.save();
 
-        console.log('New review added:', newReview);
+        req.flash('success', 'Review added successfully!');
 
         res.redirect(`/listings/${id}`);
     })
@@ -54,13 +62,26 @@ router.post(
 
 router.delete(
     '/:reviewId',
+    isLoggedIn,
     wrapAsync(async (req, res) => {
         const { id, reviewId } = req.params;
+
+        if (!mongoose.isValidObjectId(reviewId)) {
+            throw new ExpressError(404, 'Review not found');
+        }
 
         const listing = await Listing.findById(id);
 
         if (!listing) {
             throw new ExpressError(404, 'Listing not found');
+        }
+
+        const reviewBelongsToListing = listing.reviews.some(
+            (listingReviewId) => listingReviewId.equals(reviewId)
+        );
+
+        if (!reviewBelongsToListing) {
+            throw new ExpressError(404, 'Review not found');
         }
 
         await Listing.findByIdAndUpdate(id, {
@@ -71,6 +92,7 @@ router.delete(
 
         await Review.findByIdAndDelete(reviewId);
 
+        req.flash('success', 'Review deleted successfully!');
         res.redirect(`/listings/${id}`);
     })
 );

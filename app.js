@@ -193,47 +193,6 @@ app.get(
     }
 );
 
-
-// ================= DEMO USER =================
-
-// app.get(
-//     '/demouser',
-//     async (req, res, next) => {
-
-//         try {
-
-//             const fakeUser = new User({
-
-//                 email: 'std@gmail.com',
-
-//                 username: 'vicky'
-
-//             });
-
-
-//             const registeredUser =
-//                 await User.register(
-//                     fakeUser,
-//                     'helloworld'
-//                 );
-
-
-//             res.send(
-//                 registeredUser
-//             );
-
-//         }
-
-//         catch (err) {
-
-//             next(err);
-
-//         }
-
-//     }
-// );
-
-
 // ================= LISTING ROUTES =================
 
 app.use(
@@ -244,7 +203,7 @@ app.use(
 
 // ================= REVIEW ROUTES =================
 
-app.use('/listings/:id/users', reviewRouter);
+app.use('/listings/:id/reviews', reviewRouter);
 
 // ================= USER ROUTES =================
 
