@@ -61,6 +61,10 @@ router.post('/login', passport.authenticate('local', { failureFlash: true, failu
 // ================= LOGOUT ROUTE =================
 
 router.get('/logout', (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'You are not logged in.');
+        return res.redirect('/listings');
+    }
     req.logout((err) => {
         if (err) { return next(err); }
         req.flash('success', 'You have successfully logged out.');
