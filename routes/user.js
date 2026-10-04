@@ -3,8 +3,8 @@ const router = express.Router();
 
 const User = require('../models/user.js');
 const passport = require('passport');
-const Joi = require('joi');
 const { isLoggedIn } = require('../middleware.js');
+const { signupSchema } = require('../schema.js');
 
 // ================= SIGNUP ROUTES =================
 
@@ -13,11 +13,10 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', async (req, res, next) => {
-    const { error, value } = Joi.object({
-        username: Joi.string().trim().min(3).max(30).required(),
-        email: Joi.string().trim().email().lowercase().required(),
-        password: Joi.string().min(8).required(),
-    }).validate(req.body, { abortEarly: false });
+    const { error, value } = signupSchema.validate(req.body, {
+        abortEarly: false,
+        convert: true,
+    });
 
     if (error) {
         req.flash(
