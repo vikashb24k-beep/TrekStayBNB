@@ -12,7 +12,7 @@
             >
 
             <div class="card-body">
-                <p class="card-text"><strong>Owner:</strong> <%= listing.owner.username %></p>
+                <p class="card-text"><strong>Host:</strong> <%= listing.owner?.username || 'Community listing' %></p>
                 <p class="card-text"><strong>Description:</strong> <%= listing.description %></p>
                 <p class="card-text"><strong>Price:</strong> &#8377; <%= listing.price.toLocaleString('en-IN') %> / night</p>
                 <p class="card-text"><strong>Location:</strong> <%= listing.location %></p>
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <% if (currentUser) { %>
+        <% if (currentUser && listing.owner && currentUser._id.equals(listing.owner._id)) { %>
             <div class="mt-4 mb-5">
                 <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark">Edit</a>
                 <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="d-inline">

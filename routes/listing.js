@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 
 const wrapAsync = require('../utils/wrapAsync.js');
@@ -36,6 +37,26 @@ const normalizeListingImage = (listing) => {
     };
 
 };
+
+const isOwner = wrapAsync(async (req, res, next) => {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+        throw new ExpressError(404, 'Listing not found');
+    }
+
+    const listing = await Listing.findById(req.params.id);
+
+    if (!listing) {
+        throw new ExpressError(404, 'Listing not found');
+    }
+
+    if (!listing.owner || !listing.owner.equals(req.user._id)) {
+        req.flash('error', 'Only the listing owner can edit or delete this listing.');
+        return res.redirect(`/listings/${listing._id}`);
+    }
+
+    res.locals.listing = listing;
+    next();
+});
 
 
 
@@ -154,6 +175,10 @@ router.get(
 
         const { id } = req.params;
 
+        if (!mongoose.isValidObjectId(id)) {
+            throw new ExpressError(404, 'Listing not found');
+        }
+
 
         const listing =
             await Listing
@@ -163,13 +188,7 @@ router.get(
 
 
         if (!listing) {
-
-           req.flash(
-                'error',
-                'Listing not found'
-            );
-            res.redirect('/listings');
-
+            throw new ExpressError(404, 'Listing not found');
         }
 
 
@@ -191,34 +210,16 @@ router.get(
     '/:id/edit',
 
     isLoggedIn,
+    isOwner,
 
-    wrapAsync(async (req, res) => {
-
-        const { id } = req.params;
-
-
-        const listing =
-            await Listing.findById(id);
-
-
-        if (!listing) {
-
-            throw new ExpressError(
-                404,
-                'Listing not found'
-            );
-
-        }
-
-
+    (req, res) => {
         res.render(
             'listings/edit.ejs',
             {
-                listing
+                listing: res.locals.listing
             }
         );
-
-    })
+    }
 );
 
 
@@ -229,14 +230,13 @@ router.put(
     '/:id',
 
     isLoggedIn,
+    isOwner,
 
     validateListing,
 
     wrapAsync(async (req, res) => {
 
         const { id } = req.params;
-
-
         const updatedListing =
             await Listing.findByIdAndUpdate(
 
@@ -285,14 +285,14 @@ router.delete(
     '/:id',
 
     isLoggedIn,
+    isOwner,
 
     wrapAsync(async (req, res) => {
 
         const { id } = req.params;
 
 
-        const deletedListing =
-            await Listing.findByIdAndDelete(id);
+        const deletedListing = await Listing.findByIdAndDelete(id);
 
 
         if (!deletedListing) {
