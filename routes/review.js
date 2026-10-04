@@ -9,7 +9,7 @@ const { reviewSchema } = require('../schema.js');
 
 const Review = require('../models/review.js');
 const Listing = require('../models/listing.js');
-const { isLoggedIn } = require('../middleware.js');
+const { isLoggedIn,isReviewAuthor } = require('../middleware.js');
 
 // ================= VALIDATION =================
 
@@ -45,6 +45,7 @@ router.post(
         }
 
         const newReview = new Review(req.body.review);
+        newReview.author = req.user._id;
 
         listing.reviews.push(newReview);
 
@@ -63,6 +64,7 @@ router.post(
 router.delete(
     '/:reviewId',
     isLoggedIn,
+    isReviewAuthor,
     wrapAsync(async (req, res) => {
         const { id, reviewId } = req.params;
 
@@ -82,6 +84,12 @@ router.delete(
 
         if (!reviewBelongsToListing) {
             throw new ExpressError(404, 'Review not found');
+        }
+
+        const review = await Review.findById(reviewId);
+        if (!review || !review.author || !review.author.equals(req.user._id)) {
+            req.flash('error', 'Only the review author can delete this review.');
+            return res.redirect(`/listings/${id}`);
         }
 
         await Listing.findByIdAndUpdate(id, {
