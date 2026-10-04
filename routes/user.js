@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
+
 const User = require('../models/user.js');
 const passport = require('passport');
+const Joi = require('joi');
+const { isLoggedIn } = require('../middleware.js');
 
 // ================= SIGNUP ROUTES =================
 
@@ -10,32 +13,66 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', async (req, res, next) => {
-    const username = req.body.username?.trim();
-    const email = req.body.email?.trim().toLowerCase();
-    const password = req.body.password;
+    const { error, value } = Joi.object({
+        username: Joi.string().trim().min(3).max(30).required(),
+        email: Joi.string().trim().email().lowercase().required(),
+        password: Joi.string().min(8).required(),
+    }).validate(req.body, { abortEarly: false });
 
-    if (!username || !email || !password) {
-        req.flash('error', 'Username, email, and password are required.');
+    if (error) {
+        req.flash(
+            'error',
+            error.details[0].message
+        );
+
         return res.redirect('/signup');
     }
 
+    const { username, email, password } = value;
+
     try {
+        // Create new user
+        const newUser = new User({
+            username,
+            email
+        });
+
+        // Register user
+        // passport-local-mongoose automatically hashes the password
         const registeredUser = await User.register(
-            new User({ username, email }),
+            newUser,
             password
         );
 
-        await new Promise((resolve, reject) => {
-            req.login(registeredUser, (err) => err ? reject(err) : resolve());
+        // Automatically log in after signup
+        req.login(registeredUser, (err) => {
+            if (err) {
+                return next(err);
+            }
+
+            // Redirect user to original page
+            const redirectUrl =
+                res.locals.redirectUrl || '/listings';
+
+            delete req.session.returnTo;
+
+            req.flash(
+                'success',
+                'Welcome to TrekStayBNB! Your account is ready.'
+            );
+
+            res.redirect(redirectUrl);
         });
 
-        const redirectUrl = req.session.returnTo || '/listings';
-        delete req.session.returnTo;
-        req.flash('success', 'Welcome to TrekStayBNB! Your account is ready.');
-        res.redirect(redirectUrl);
     } catch (err) {
+
+        // Username already exists
         if (err.name === 'UserExistsError') {
-            req.flash('error', `${username} That username is already taken. Please choose another.`);
+            req.flash(
+                'error',
+                `${username} is already taken. Please choose another username.`
+            );
+
             return res.redirect('/signup');
         }
 
@@ -43,33 +80,76 @@ router.post('/signup', async (req, res, next) => {
     }
 });
 
+
 // ================= LOGIN ROUTES =================
 
 router.get('/login', (req, res) => {
     res.render('users/login');
 });
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
-    const redirectUrl = req.session.returnTo || '/listings';
-    delete req.session.returnTo;
+router.post(
+    '/login',
 
-    req.flash('success', 'You have successfully logged in.');
-    res.redirect(redirectUrl);
+    (req, res, next) => {
+        if (typeof req.body.username === 'string') {
+            req.body.username = req.body.username.trim();
+        }
+        next();
+    },
+
+    passport.authenticate('local', {
+        failureFlash: true,
+        failureRedirect: '/login'
+    }),
+
+    (req, res) => {
+
+        const redirectUrl =
+            res.locals.redirectUrl || '/listings';
+
+        delete req.session.returnTo;
+
+        req.flash(
+            'success',
+            'You have successfully logged in.'
+        );
+
+        res.redirect(redirectUrl);
+    }
+);
+
+router.get('/profile', isLoggedIn, (req, res) => {
+    res.render('users/profile', { user: req.user });
 });
 
 
 // ================= LOGOUT ROUTE =================
 
-router.get('/logout', (req, res, next) => {
+router.post('/logout', (req, res, next) => {
+
     if (!req.isAuthenticated()) {
-        req.flash('error', 'You are not logged in.');
+        req.flash(
+            'error',
+            'You are not logged in.'
+        );
+
         return res.redirect('/listings');
     }
+
     req.logout((err) => {
-        if (err) { return next(err); }
-        req.flash('success', 'You have successfully logged out.');
+
+        if (err) {
+            return next(err);
+        }
+
+        req.flash(
+            'success',
+            'You have successfully logged out.'
+        );
+
         res.redirect('/listings');
     });
 });
+
 
 module.exports = router;

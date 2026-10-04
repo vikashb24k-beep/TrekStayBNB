@@ -16,6 +16,7 @@
 
                 <input
                     type="text"
+                    id="title"
                     placeholder="Enter title"
                     name="listing[title]"
                     class="form-control"
@@ -37,6 +38,7 @@
                 </label>
 
                 <textarea
+                    id="description"
                     name="listing[description]"
                     class="form-control"
                     placeholder="Enter description"
@@ -59,6 +61,7 @@
 
                 <input
                     type="url"
+                    id="image"
                     placeholder="https://example.com/image.jpg"
                     name="listing[image][url]"
                     class="form-control"
@@ -80,9 +83,12 @@
 
                 <input
                     type="number"
+                    id="price"
                     placeholder="Enter price"
                     name="listing[price]"
                     class="form-control"
+                    min="0"
+                    step="0.01"
                     required
                 >
                 <div class="invalid-feedback">
@@ -104,6 +110,7 @@
 
                     <input
                         type="text"
+                        id="location"
                         placeholder="Enter location"
                         name="listing[location]"
                         class="form-control"
@@ -125,6 +132,7 @@
 
                     <input
                         type="text"
+                        id="country"
                         placeholder="Enter country"
                         name="listing[country]"
                         class="form-control"

@@ -18,6 +18,9 @@
                     name="username"
                     id="username"
                     class="form-control"
+                    minlength="3"
+                    maxlength="30"
+                    autocomplete="username"
                     required
                 >
                 <div class="invalid-feedback">
@@ -53,12 +56,14 @@
                     id="password"
                     class="form-control"
                     autocomplete="new-password"
+                    minlength="8"
                     required
                 >
                 <div class="invalid-feedback">Enter a password.</div>
             </div>
 
             <button type="submit" class="btn btn-dark">Sign up</button>
+            <p class="mt-3 mb-0">Already have an account? <a href="/login">Sign in</a></p>
 
         </form>
 

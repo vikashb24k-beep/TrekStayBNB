@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-thin fa-compass" style="color: rgb(23, 96, 227);"></i>
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/"><i class="fa-solid fa-compass" style="color: rgb(23, 96, 227);"></i>
 <p class="kk">TrekStayBNB</p></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -17,8 +17,10 @@
           <a class="nav-link" href="/login">Login</a>
           <a class="nav-link" href="/signup">Register</a>
         <% } else { %>
-          <a class="nav-link" href="/profile">Profile</a>
-          <a class="nav-link" href="/logout">Log out</a>
+          <a class="nav-link" href="/profile"><%= currentUser.username %></a>
+          <form method="POST" action="/logout" class="d-flex">
+            <button type="submit" class="nav-link btn btn-link">Log out</button>
+          </form>
         <% } %>
 
       </div>

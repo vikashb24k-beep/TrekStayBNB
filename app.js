@@ -11,6 +11,7 @@ const ExpressError = require('./utils/ExpressError.js');
 const listingRouter = require('./routes/listing.js');
 const reviewRouter  = require('./routes/review.js');
 const userRouter = require('./routes/user.js');
+const { saveRedirectUrl } = require('./middleware.js');
 
 
 // ================= SESSION =================
@@ -40,7 +41,7 @@ const User = require('./models/user.js');
 
 const app = express();
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 
 // ================= EJS SETUP =================
@@ -88,11 +89,11 @@ app.use(
 
 const sessionOptions = {
 
-    secret: 'mysupersecretcode',
+    secret: process.env.SESSION_SECRET || 'development-only-session-secret',
 
     resave: false,
 
-    saveUninitialized: true,
+    saveUninitialized: false,
 
     store: MongoStore.create({
 
@@ -109,7 +110,11 @@ const sessionOptions = {
             60 *
             1000,
 
-        httpOnly: true
+        httpOnly: true,
+
+        sameSite: 'lax',
+
+        secure: process.env.NODE_ENV === 'production'
 
     }
 
@@ -137,6 +142,8 @@ app.use(
 app.use(
     passport.session()
 );
+
+app.use(saveRedirectUrl);
 
 
 // ================= PASSPORT LOCAL STRATEGY =================
@@ -188,7 +195,7 @@ app.get(
     '/',
     (req, res) => {
 
-        res.send('home');
+        res.redirect('/listings');
 
     }
 );

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const path = require('path');
 const initData = require('./data.js');
 require('dotenv').config({
-    path: '../.env',
+    path: path.join(__dirname, '..', '.env'),
 });
 
 const Listing = require('../models/listing.js');
@@ -15,18 +16,13 @@ async function main() {
 // ================= INITIALIZE DATABASE =================
 
 const initDB = async () => {
-    try {
-        // Delete existing listings
-        await Listing.deleteMany({});
+    // This initializer intentionally replaces the existing listing collection.
+    await Listing.deleteMany({});
 
-        // Insert initial data
-        await Listing.insertMany(initData.data);
+    // Insert initial data
+    await Listing.insertMany(initData.data);
 
-        console.log('Data initialized successfully!');
-    } catch (err) {
-        console.log('Error initializing data:');
-        console.log(err);
-    }
+    console.log('Data initialized successfully!');
 };
 
 // ================= START =================
@@ -38,13 +34,12 @@ async function start() {
         console.log('MongoDB connected successfully!');
 
         await initDB();
-
-        await mongoose.connection.close();
-
-        console.log('Database connection closed.');
     } catch (err) {
-        console.log('MongoDB connection failed:');
-        console.log(err.message);
+        console.error('Database initialization failed:', err.message);
+        process.exitCode = 1;
+    } finally {
+        await mongoose.connection.close();
+        console.log('Database connection closed.');
     }
 }
 

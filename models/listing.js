@@ -7,11 +7,13 @@ const listingSchema = new Schema({
     title: {
         type: String,
         required: true,
+        trim: true,
     },
 
     description: {
         type: String,
         required: true,
+        trim: true,
     },
 
     image: {
@@ -29,16 +31,19 @@ const listingSchema = new Schema({
     price: {
         type: Number,
         required: true,
+        min: 0,
     },
 
     location: {
         type: String,
         required: true,
+        trim: true,
     },
 
     country: {
         type: String,
         required: true,
+        trim: true,
     },
     reviews: [
         {
