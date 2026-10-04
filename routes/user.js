@@ -4,11 +4,15 @@ const router = express.Router();
 const { isLoggedIn } = require('../middleware.js');
 const userController = require('../controllers/users.js');
 
-router.get('/signup', userController.renderSignup);
-router.post('/signup', userController.signup);
-router.get('/login', userController.renderSignin);
-router.post(
-    '/login',
+router
+   .route('/signup')
+   .get(userController.renderSignup)
+   .post( userController.signup);
+
+router
+   .route('/login')
+   .get( userController.renderSignin)
+   .post(
     (req, res, next) => {
         if (typeof req.body.username === 'string') req.body.username = req.body.username.trim();
         next();
@@ -19,6 +23,7 @@ router.post(
     }),
     userController.signin
 );
+
 
 router.post('/logout', (req, res, next) => {
     if (!req.isAuthenticated()) {

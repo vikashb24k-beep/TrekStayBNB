@@ -92,14 +92,14 @@ const validateListing = (req, res, next) => {
 };
 
 
-// ================= INDEX ROUTE =================
-// GET /listings
-
-router.get(
-    '/',
-    wrapAsync(listingController.index)
+// ================= INDEX, CREATE ROUTES =================
+router
+    .route('/').get(wrapAsync(listingController.index))
+    .post(
+    isLoggedIn,
+    validateListing,
+    wrapAsync(listingController.createListing)
 );
-
 
 // ================= NEW ROUTE =================
 // GET /listings/new
@@ -110,27 +110,12 @@ router.get(
     wrapAsync(listingController.renderNewForm)
 );
 
-
-// ================= CREATE ROUTE =================
-// POST /listings
-
-router.post(
-    '/',
-    isLoggedIn,
-    validateListing,
-
-    wrapAsync(listingController.createListing)
-);
-
-
-// ================= SHOW ROUTE =================
-// GET /listings/:id
-
-router.get(
-    '/:id',
-    wrapAsync(listingController.showListing)
-);
-
+// ================= SHOW, UPDATE, DELETE ROUTES =================
+router
+    .route('/:id')
+    .get(wrapAsync(listingController.showListing))
+    .put( isLoggedIn, isOwner, validateListing, wrapAsync(listingController.updateListing))
+    .delete( isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));
 
 // ================= EDIT ROUTE =================
 // GET /listings/:id/edit
@@ -143,19 +128,4 @@ router.get(
 );
 
 
-// ================= UPDATE ROUTE =================
-// PUT /listings/:id
-
-router.put(
-    '/:id',
-    isLoggedIn,
-    isOwner,
-    validateListing,
-    wrapAsync(listingController.updateListing)
-);
-
-// ================= DELETE ROUTE =================
-// DELETE /listings/:id
-
-router.delete('/:id', isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));
 module.exports = router;
