@@ -12,9 +12,12 @@ body{
     height: 5rem;
     background-color: white;
 }
-.kk{
-    color: #fe424d;
-    font-size: 2rem;
+.navbar-logo{
+    display: block;
+    width: auto;
+    height: 3.5rem;
+    max-width: min(45vw, 15rem);
+    object-fit: contain;
 }
 
 .nav-link{
