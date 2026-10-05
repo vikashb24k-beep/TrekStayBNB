@@ -1,9 +1,11 @@
+require('dotenv').config({
+    path: require('path').resolve(__dirname, '../.env'),
+});
 const mongoose = require('mongoose');
 const initData = require('./data.js');
-require('dotenv').config();
+
 const connectDB = require('../config/db.js');
 const Listing = require('../models/listing.js');
-
 // ================= MONGODB CONNECTION =================
 
 // ================= INITIALIZE DATABASE =================
@@ -11,11 +13,9 @@ const Listing = require('../models/listing.js');
 const initDB = async () => {
     // This initializer intentionally replaces the existing listing collection.
     await Listing.deleteMany({});
-    initData.data = initData.data.map((obj) => ({ ...obj, owner: "6ac185939de38aa0996a0cc7" }));
 
     // Insert initial data
     await Listing.insertMany(initData.data);
-
 
     console.log('Data initialized successfully!');
 };
