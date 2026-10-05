@@ -17,6 +17,9 @@ const userRoutes = require('./routes/userRoutes.js');
 
 const app = express();
 
+// Render terminates HTTPS at its reverse proxy; trust it so secure cookies work.
+app.set('trust proxy', 1);
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('ejs', ejsMate);

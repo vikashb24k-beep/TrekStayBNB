@@ -1,5 +1,4 @@
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const requiredVariables = ['C_NAME', 'C_API_KEY', 'C_SECRET'];
 const missingVariables = requiredVariables.filter((key) => !process.env[key]);
@@ -13,12 +12,4 @@ cloudinary.config({
     api_secret: process.env.C_SECRET,
 });
 
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: {
-        folder: 'TrackStayBNB',
-        allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'webp'],
-    },
-});
-
-module.exports = { cloudinary, storage };
+module.exports = { cloudinary };
