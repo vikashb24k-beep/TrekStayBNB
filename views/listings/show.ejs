@@ -379,8 +379,10 @@
                 class="listing-map rounded"
                 role="region"
                 aria-label="Map showing the listing location"
+                aria-describedby="listing-map-status"
                 data-map-token="<%= mapboxToken || '' %>"
                 data-map-location="<%= `${listing.location || ''}, ${listing.country || ''}` %>"
+                data-map-coordinates="<%= listing.geometry?.coordinates?.join(',') || '' %>"
                 style="height: 400px; width: 100%;"
             ></div>
 
@@ -390,6 +392,7 @@
                 id="listing-map-status"
                 class="small text-muted mt-2 mb-0"
                 role="status"
+                aria-live="polite"
             >
                 Loading map...
             </p>

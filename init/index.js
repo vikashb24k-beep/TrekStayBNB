@@ -1,17 +1,10 @@
 const mongoose = require('mongoose');
-const path = require('path');
 const initData = require('./data.js');
-require('dotenv').config({
-    path: path.join(__dirname, '..', '.env'),
-});
-
+require('dotenv').config();
+const connectDB = require('../config/db.js');
 const Listing = require('../models/listing.js');
 
 // ================= MONGODB CONNECTION =================
-
-async function main() {
-    await mongoose.connect(process.env.MONGO_URI);
-}
 
 // ================= INITIALIZE DATABASE =================
 
@@ -31,7 +24,7 @@ const initDB = async () => {
 
 async function start() {
     try {
-        await main();
+        await connectDB();
 
         console.log('MongoDB connected successfully!');
 

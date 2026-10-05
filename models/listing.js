@@ -38,6 +38,24 @@ const listingSchema = new Schema({
         required: true,
         trim: true,
     },
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+        },
+        coordinates: {
+            type: [Number],
+            default: undefined,
+            validate: {
+                validator: (coordinates) =>
+                    Array.isArray(coordinates) &&
+                    coordinates.length === 2 &&
+                    coordinates[0] >= -180 && coordinates[0] <= 180 &&
+                    coordinates[1] >= -90 && coordinates[1] <= 90,
+                message: 'Coordinates must be [longitude, latitude].',
+            },
+        },
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,

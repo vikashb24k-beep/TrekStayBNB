@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Listing = require('../models/listing.js');
 const ExpressError = require('../utils/ExpressError.js');
+const geocodeLocation = require('../utils/geocode.js');
+const { publicToken } = require('../config/mapbox.js');
 
 const DEFAULT_LISTING_IMAGE = '/images/listing-placeholder.svg';
 
@@ -21,6 +23,10 @@ module.exports.renderNewForm = (req, res) => res.render('listings/new.ejs');
 
 module.exports.createListing = async (req, res) => {
     const newListing = new Listing(normalizeListingImage(req.body.listing));
+    newListing.geometry = {
+        type: 'Point',
+        coordinates: await geocodeLocation(newListing.location, newListing.country),
+    };
     newListing.owner = req.user._id;
     await newListing.save();
     req.flash('success', 'New listing created successfully!');
@@ -37,7 +43,7 @@ module.exports.showListing = async (req, res) => {
     if (!listing) throw new ExpressError(404, 'Listing not found');
     res.render('listings/show.ejs', {
         listing,
-        mapboxToken: process.env.MAPBOX_ACCESS_TOKEN || '',
+        mapboxToken: publicToken,
     });
 };
 
@@ -47,12 +53,22 @@ module.exports.renderEditForm = (req, res) => {
 
 module.exports.updateListing = async (req, res) => {
     const { id } = req.params;
-    const updatedListing = await Listing.findByIdAndUpdate(
-        id,
-        normalizeListingImage(req.body.listing),
-        { new: true, runValidators: true }
-    );
-    if (!updatedListing) throw new ExpressError(404, 'Listing not found');
+    const listing = await Listing.findById(id);
+    if (!listing) throw new ExpressError(404, 'Listing not found');
+
+    const updatedData = normalizeListingImage(req.body.listing);
+    const locationChanged =
+        listing.location !== updatedData.location ||
+        listing.country !== updatedData.country;
+
+    Object.assign(listing, updatedData);
+    if (locationChanged || !listing.geometry?.coordinates?.length) {
+        listing.geometry = {
+            type: 'Point',
+            coordinates: await geocodeLocation(listing.location, listing.country),
+        };
+    }
+    await listing.save();
     req.flash('success', 'Listing updated successfully!');
     res.redirect(`/listings/${id}`);
 };

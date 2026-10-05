@@ -3,7 +3,7 @@
 <div class="row mt-4">
     <div class="col-12 col-lg-8 offset-lg-2">
         <h1 class="mb-4">Edit listing</h1>
-        <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation">
+        <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input id="title" type="text" value="<%= listing.title %>" name="listing[title]" class="form-control" required>
@@ -15,11 +15,16 @@
                 <div class="invalid-feedback">Enter a description.</div>
             </div>
             <div class="mb-3">
-                <label for="image" class="form-label">Image URL (optional)</label>
-                <input id="image" type="text" value="<%= listing.image?.url || '' %>" name="listing[image][url]" class="form-control" placeholder="https://example.com/image.jpg" data-image-url-input data-preview-target="#listing-image-preview">
-                <div class="form-text">Use an HTTP or HTTPS URL, or keep the uploaded image path.</div>
+                <label for="image-url" class="form-label">Image URL</label>
+                <input id="image-url" type="text" value="<%= listing.image?.url || '' %>" name="listing[image][url]" class="form-control" placeholder="https://example.com/image.jpg" data-image-url-input data-preview-target="#listing-image-preview">
+                <div class="form-text">Use an HTTP or HTTPS URL, or upload a replacement below.</div>
             </div>
             <div class="mb-3">
+                <label for="image-file" class="form-label">Upload replacement image (optional)</label>
+                <input id="image-file" type="file" name="listing[image]" accept="image/jpeg,image/png,image/gif,image/webp" class="form-control" data-image-file-input data-preview-target="#listing-image-preview">
+                <div class="form-text">JPG, PNG, GIF, or WebP up to 5 MB.</div>
+            </div>
+            <div class="mb-3" id="listing-image-preview-container">
                 <p class="form-label mb-2">Image preview</p>
                 <img
                     id="listing-image-preview"

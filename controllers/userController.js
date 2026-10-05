@@ -1,22 +1,11 @@
 const User = require('../models/user.js');
-const { signupSchema } = require('../schema.js');
 
 module.exports.renderSignup = (req, res) => {
     res.render('users/signup');
 };
 
 module.exports.signup = async (req, res, next) => {
-    const { error, value } = signupSchema.validate(req.body, {
-        abortEarly: false,
-        convert: true,
-    });
-
-    if (error) {
-        req.flash('error', error.details[0].message);
-        return res.redirect('/signup');
-    }
-
-    const { username, email, password } = value;
+    const { username, email, password } = req.body;
 
     try {
         const registeredUser = await User.register(new User({ username, email }), password);
@@ -46,6 +35,14 @@ module.exports.signin = (req, res) => {
     delete req.session.returnTo;
     req.flash('success', 'You have successfully logged in.');
     res.redirect(redirectUrl);
+};
+
+module.exports.logout = (req, res, next) => {
+    req.logout((err) => {
+        if (err) return next(err);
+        req.flash('success', 'You have successfully logged out.');
+        res.redirect('/listings');
+    });
 };
 
 module.exports.profile = (req, res) => {
