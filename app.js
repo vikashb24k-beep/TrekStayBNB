@@ -240,6 +240,10 @@ app.use(
 app.use(
     (err, req, res, next) => {
 
+        if (res.headersSent) {
+            return next(err);
+        }
+
         const {
 
             statusCode = 500,

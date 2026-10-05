@@ -6,7 +6,7 @@
 
         <h1 class="mb-4">Create New Listing</h1>
 
-        <form method="POST" action="/listings" novalidate class=" needs-validation ">
+        <form method="POST" action="/listings" novalidate class=" needs-validation" enctype="multipart/form-data">
 
             <!-- Title -->
             <div class="mb-3">
@@ -56,22 +56,29 @@
             <!-- Image -->
             <div class="mb-3" >
                 <label for="image" class="form-label">
-                    Image URL
+                    Upload Image : 
                 </label>
 
                 <input
-                    type="url"
+                    type="file"
                     id="image"
-                    placeholder="https://example.com/image.jpg"
-                    name="listing[image][url]"
+                    name="listing[image]"
+                    accept="image/jpeg,image/png,image/gif,image/webp"
                     class="form-control"
+                    data-image-file-input
+                    data-preview-target="#listing-image-preview"
                 >
                  <div class="invalid-feedback">
-                    Enter a valid image URL (http or https), or leave it blank.
+                    Upload a JPG, PNG, GIF, or WebP image no larger than 5 MB.
                 </div>
                 <div class="valid-feedback">
                     Looks good!
                  </div>
+            </div>
+
+            <div class="mb-3 d-none" id="listing-image-preview-container">
+                <p class="form-label mb-2">Image preview</p>
+                <img id="listing-image-preview" class="img-fluid rounded border" alt="Selected listing image preview" style="max-height: 280px;">
             </div>
 
 

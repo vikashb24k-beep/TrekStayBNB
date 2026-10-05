@@ -16,8 +16,19 @@
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Image URL (optional)</label>
-                <input id="image" type="url" value="<%= listing.image?.url || '' %>" name="listing[image][url]" class="form-control" placeholder="https://example.com/image.jpg">
-                <div class="invalid-feedback">Use a valid HTTP or HTTPS image URL.</div>
+                <input id="image" type="text" value="<%= listing.image?.url || '' %>" name="listing[image][url]" class="form-control" placeholder="https://example.com/image.jpg" data-image-url-input data-preview-target="#listing-image-preview">
+                <div class="form-text">Use an HTTP or HTTPS URL, or keep the uploaded image path.</div>
+            </div>
+            <div class="mb-3">
+                <p class="form-label mb-2">Image preview</p>
+                <img
+                    id="listing-image-preview"
+                    src="<%= listing.image?.url || '/images/listing-placeholder.svg' %>"
+                    data-fallback-src="/images/listing-placeholder.svg"
+                    class="img-fluid rounded border"
+                    alt="Listing image preview"
+                    style="max-height: 280px;"
+                >
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Price per night</label>

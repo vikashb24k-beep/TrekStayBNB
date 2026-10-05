@@ -10,33 +10,40 @@ const { listingSchema } = require('../schema.js');
 const Listing = require('../models/listing.js');
 const listingController = require('../controllers/listings.js');
 const { isLoggedIn } = require('../middleware.js');
+const multer = require('multer');
+const { storage } = require('../cloudconfig.js');
 
+const upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, callback) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(file.mimetype)) {
+            return callback(new ExpressError(400, 'Upload a JPG, PNG, GIF, or WebP image (maximum 5 MB).'));
+        }
+        callback(null, true);
+    },
+});
 
-// ================= DEFAULT IMAGE =================
-
-const DEFAULT_LISTING_IMAGE = '/images/listing-placeholder.svg';
-
-
-// ================= NORMALIZE IMAGE =================
-
-const normalizeListingImage = (listing) => {
-
-    const imageUrl = listing.image?.url?.trim();
-
-    return {
-
-        ...listing,
-
-        image: {
-
-            ...listing.image,
-
-            url: imageUrl || DEFAULT_LISTING_IMAGE
-
+const uploadListingImage = (req, res, next) => {
+    upload.single('listing[image]')(req, res, (err) => {
+        if (err) {
+            const message = err.code === 'LIMIT_FILE_SIZE'
+                ? 'Image must be 5 MB or smaller.'
+                : err.message;
+            return next(new ExpressError(400, message));
         }
 
-    };
+        if (req.file) {
+            req.body.listing = req.body.listing || {};
+            req.body.listing.image = {
+                filename: req.file.filename || req.file.originalname,
+                url: req.file.path,
+            };
+        }
 
+        next();
+    });
 };
 
 const isOwner = wrapAsync(async (req, res, next) => {
@@ -94,12 +101,9 @@ const validateListing = (req, res, next) => {
 
 // ================= INDEX, CREATE ROUTES =================
 router
-    .route('/').get(wrapAsync(listingController.index))
-    .post(
-    isLoggedIn,
-    validateListing,
-    wrapAsync(listingController.createListing)
-);
+    .route('/')
+    .get(wrapAsync(listingController.index))
+    .post(isLoggedIn, uploadListingImage, validateListing, wrapAsync(listingController.createListing));
 
 // ================= NEW ROUTE =================
 // GET /listings/new

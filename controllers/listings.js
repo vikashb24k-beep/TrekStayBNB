@@ -35,7 +35,10 @@ module.exports.showListing = async (req, res) => {
         .populate({ path: 'reviews', populate: { path: 'author' } })
         .populate('owner');
     if (!listing) throw new ExpressError(404, 'Listing not found');
-    res.render('listings/show.ejs', { listing });
+    res.render('listings/show.ejs', {
+        listing,
+        mapboxToken: process.env.MAPBOX_ACCESS_TOKEN || '',
+    });
 };
 
 module.exports.renderEditForm = (req, res) => {

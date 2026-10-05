@@ -126,4 +126,10 @@ body{
     object-fit: cover;
 }
 
+.listing-map {
+    min-height: 360px;
+    width: 100%;
+    background: #eef1f3;
+}
+
 
