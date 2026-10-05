@@ -106,6 +106,12 @@
                  </div>
             </div>
 
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select id="category" name="listing[category]" class="form-select" required>
+                    <% for (const category of categories) { %><option value="<%= category %>"><%= category %></option><% } %>
+                </select>
+            </div>
 
             <!-- Location + Country -->
             <div class="row">

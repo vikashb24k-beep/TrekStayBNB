@@ -7,6 +7,7 @@ module.exports = Joi.object({
         location: Joi.string().trim().max(256).required(),
         country: Joi.string().trim().max(256).required(),
         price: Joi.number().required().min(0),
+        category: Joi.string().valid('Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pools', 'Farms', 'Arctic').default('Trending'),
         image: Joi.object({
             filename: Joi.string().allow('', null),
             url: Joi.alternatives().try(

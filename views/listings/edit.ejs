@@ -40,6 +40,12 @@
                 <input id="price" type="number" min="0" step="0.01" value="<%= listing.price %>" name="listing[price]" class="form-control" required>
                 <div class="invalid-feedback">Enter a price of zero or more.</div>
             </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select id="category" name="listing[category]" class="form-select" required>
+                    <% for (const category of categories) { %><option value="<%= category %>" <%= (listing.category || 'Trending') === category ? 'selected' : '' %>><%= category %></option><% } %>
+                </select>
+            </div>
             <div class="row">
                 <div class="mb-3 col-md-8">
                     <label for="location" class="form-label">Location</label>

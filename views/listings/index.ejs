@@ -1,9 +1,44 @@
 <% layout('/layouts/boilerplate')%>
+<style>
+    #filters {
+        display: flex;
+        flex-wrap: wrap;
+
+    }
+    .filter{
+        text-align: center;
+        margin-right: 2rem;
+        margin-top : 2rem;
+        opacity: 0.7;
+    }
+
+    .filter:hover, .filter.active{
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    .filter { color: inherit; text-decoration: none; }
+
+    .filter p {
+        font-size: 0.8rem;
+    }
+</style>
+<div id="filters">
+    <% const icons = { 'Trending': 'fa-fire', 'Rooms': 'fa-bed', 'Iconic Cities': 'fa-mountain-city', 'Mountains': 'fa-mountain', 'Castles': 'fa-chess-rook', 'Amazing Pools': 'fa-person-swimming', 'Farms': 'fa-tractor', 'Arctic': 'fa-snowman' }; %>
+    <a class="filter <%= selectedCategory === '' ? 'active' : '' %>" href="/listings">
+        <div><i class="fa-solid fa-house"></i></div><p>All</p>
+    </a>
+    <% for (const category of categories) { %>
+        <a class="filter <%= selectedCategory === category ? 'active' : '' %>" href="/listings?category=<%= encodeURIComponent(category) %>">
+            <div><i class="fa-solid <%= icons[category] %>"></i></div><p><%= category %></p>
+        </a>
+    <% } %>
+</div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <% if (!allListings.length) { %>
             <div class="col-12">
-                <p class="text-muted">No listings yet. Sign in to create the first one.</p>
+                <p class="text-muted"><%= selectedCategory ? `No listings in ${selectedCategory} yet.` : 'No listings yet. Sign in to create the first one.' %></p>
             </div>
         <% } %>
         <% for(let listing of allListings) { %>

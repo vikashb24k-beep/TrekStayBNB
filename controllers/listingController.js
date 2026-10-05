@@ -15,11 +15,13 @@ const normalizeListingImage = (listing) => ({
 });
 
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render('listings/index.ejs', { allListings });
+    const categories = ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pools', 'Farms', 'Arctic'];
+    const selectedCategory = categories.includes(req.query.category) ? req.query.category : '';
+    const allListings = await Listing.find(selectedCategory ? { category: selectedCategory } : {});
+    res.render('listings/index.ejs', { allListings, categories, selectedCategory });
 };
 
-module.exports.renderNewForm = (req, res) => res.render('listings/new.ejs');
+module.exports.renderNewForm = (req, res) => res.render('listings/new.ejs', { categories: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pools', 'Farms', 'Arctic'] });
 
 module.exports.createListing = async (req, res) => {
     const newListing = new Listing(normalizeListingImage(req.body.listing));
@@ -48,7 +50,7 @@ module.exports.showListing = async (req, res) => {
 };
 
 module.exports.renderEditForm = (req, res) => {
-    res.render('listings/edit.ejs', { listing: res.locals.listing });
+    res.render('listings/edit.ejs', { listing: res.locals.listing, categories: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pools', 'Farms', 'Arctic'] });
 };
 
 module.exports.updateListing = async (req, res) => {

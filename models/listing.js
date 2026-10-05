@@ -70,6 +70,11 @@ const listingSchema = new Schema({
         type: Date,
         default: Date.now,
     },
+    category: {
+        type: String,
+        enum: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pools', 'Farms', 'Arctic'],
+        default: 'Trending',
+    }
 });
 
 // middleware to delete all reviews associated with a listing when the listing is deleted

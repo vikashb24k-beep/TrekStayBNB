@@ -1,25 +1,28 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center gap-2" href="/"><i class="fa-solid fa-compass" style="color: rgb(23, 96, 227);"></i>
-<p class="kk">TrekStayBNB</p></a>
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/listings">
+      <p class="kk">TrekStayBNB</p>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" aria-current="page" href="/">Home</a>
-        <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add new listings</a>
+
+        <a class="nav-link" href="/listings">Explore</a>
+
+
 
       </div>
       <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">Airbnb your home</a>
         <% if (!currentUser) { %>
-          <a class="nav-link" href="/login">Login</a>
-          <a class="nav-link" href="/signup">Register</a>
+          <a class="nav-link" href="/login"><b>Login</b></a>
+          <a class="nav-link" href="/signup"><b>Register</b></a>
         <% } else { %>
           <a class="nav-link" href="/profile"><%= currentUser.username %></a>
           <form method="POST" action="/logout" class="d-flex">
-            <button type="submit" class="nav-link btn btn-link">Log out</button>
+            <button type="submit" class="nav-link btn btn-link"><b>Log out</b></button>
           </form>
         <% } %>
 
