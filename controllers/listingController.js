@@ -17,8 +17,24 @@ const normalizeListingImage = (listing) => ({
 module.exports.index = async (req, res) => {
     const categories = ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pools', 'Farms', 'Arctic'];
     const selectedCategory = categories.includes(req.query.category) ? req.query.category : '';
-    const allListings = await Listing.find(selectedCategory ? { category: selectedCategory } : {});
-    res.render('listings/index.ejs', { allListings, categories, selectedCategory });
+    const searchTerm = typeof req.query.q === 'string' ? req.query.q.trim().slice(0, 100) : '';
+    const filters = [];
+
+    if (selectedCategory) filters.push({ category: selectedCategory });
+    if (searchTerm) {
+        const escapedSearch = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const searchRegex = new RegExp(escapedSearch, 'i');
+        filters.push({
+            $or: [
+                { title: searchRegex },
+                { location: searchRegex },
+                { country: searchRegex },
+            ],
+        });
+    }
+
+    const allListings = await Listing.find(filters.length ? { $and: filters } : {});
+    res.render('listings/index.ejs', { allListings, categories, selectedCategory, searchTerm });
 };
 
 module.exports.renderNewForm = (req, res) => res.render('listings/new.ejs', { categories: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pools', 'Farms', 'Arctic'] });

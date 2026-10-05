@@ -1,3 +1,14 @@
+<style>
+  .btn-search{
+    background-color: #fe424d;
+    color: white;
+  }
+  .btn-search:hover{
+    background-color: #fe424d;
+    color: white;
+  }
+</style>
+
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center gap-2" href="/listings">
@@ -14,13 +25,26 @@
 
 
       </div>
+
+      <div class="navbar-nav ms-auto">
+     <form class="d-flex" role="search" action="/listings" method="GET">
+      <input class="form-control me-2" type="search" name="q" value="<%= typeof searchTerm !== 'undefined' ? searchTerm : '' %>" placeholder="Search destinations" aria-label="Search destinations"/>
+      <% if (typeof selectedCategory !== 'undefined' && selectedCategory) { %>
+        <input type="hidden" name="category" value="<%= selectedCategory %>">
+      <% } %>
+      <button class="btn btn-search" type="submit">Search</button>
+    </form>
+
+      </div>
       <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new">Airbnb your home</a>
         <% if (!currentUser) { %>
           <a class="nav-link" href="/login"><b>Login</b></a>
           <a class="nav-link" href="/signup"><b>Register</b></a>
         <% } else { %>
+
           <a class="nav-link" href="/profile"><%= currentUser.username %></a>
+          </div>
           <form method="POST" action="/logout" class="d-flex">
             <button type="submit" class="nav-link btn btn-link"><b>Log out</b></button>
           </form>
